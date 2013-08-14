@@ -1,6 +1,7 @@
 import sys
 
-from uploader import EDID_Uploader
+from uploader import EDIDUploader
+
 
 def get_grabber():
     if sys.platform.startswith('win'):
@@ -17,8 +18,20 @@ def get_grabber():
     else:
         return None
 
-mygrabber = get_grabber()
-mygrabber.grab_EDID()
 
-#myuploader = EDID_Uploader()
-#myuploader.upload_list(mygrabber.EDIDs)
+print 'Starting EDID Grabber\n\n'
+
+print 'Collecting EDIDs from operating system ...'
+grabber = get_grabber()
+grabber.grab_EDID()
+print 'EDID items found: %s\n' % (len(grabber.EDIDs))
+
+if len(grabber.EDIDs) > 0:
+    print 'Uploading EDIDs ...'
+    uploader = EDIDUploader()
+    uploader.upload(grabber.EDIDs)
+    print 'Succeeded: %s, Failed: %s\n' % (uploader.succeeded, uploader.failed)
+else:
+    print 'No EDIDs to upload.\n'
+
+print 'Aborting.'

@@ -4,7 +4,8 @@ from grabbers import Grabber
 
 class WindowsGrabber(Grabber):
     """
-    Stored at "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\DISPLAY\{{monitor_name}}\{{monitor_name_id}}\Device Parameters"
+    Stored at "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\DISPLAY\
+               {{monitor_name}}\{{monitor_name_id}}\Device Parameters"
     monitor_name: "%s%s" % (ID Manufacturer Name, ID Product Code)
     monitor_name_id: Unknown, can be more than one per monitor
     """
@@ -16,7 +17,10 @@ class WindowsGrabber(Grabber):
             IDs_key, IDs = self._get_IDs(displays_key, display)
 
             for ID in IDs:
-                parameters_key = _winreg.OpenKey(IDs_key, r"%s\%s" % (ID, r"Device Parameters"))
+                parameters_key = _winreg.OpenKey(
+                    IDs_key,
+                    r"%s\%s" % (ID, r"Device Parameters")
+                )
 
                 try:
                     n, v, t = _winreg.EnumValue(parameters_key, 0)
@@ -33,7 +37,10 @@ class WindowsGrabber(Grabber):
 
     def _get_displays(self):
         displays = []
-        displays_key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Enum\DISPLAY")
+        displays_key = _winreg.OpenKey(
+            _winreg.HKEY_LOCAL_MACHINE,
+            r"SYSTEM\CurrentControlSet\Enum\DISPLAY"
+        )
 
         for i in range(1024):
             try:
